@@ -1,0 +1,78 @@
+#include <cstdio>
+#include <string>
+#include <iostream>
+using namespace std;
+
+#include "exprtk.hpp"
+
+template <typename T>
+void trig_function()
+{
+    typedef exprtk::symbol_table<T> symbol_table_t;
+    typedef exprtk::expression<T>   expression_t;
+    typedef exprtk::parser<T>       parser_t;
+
+    const std::string expression_string = "clamp(-1.0, sin(2 * pi * x) + cos(x / 2 * pi), +1.0)";
+
+    T x;
+
+    symbol_table_t symbol_table;
+    symbol_table.add_variable("x", x);
+    symbol_table.add_constants();
+
+    expression_t expression;
+    expression.register_symbol_table(symbol_table);
+
+    parser_t parser;
+    parser.compile(expression_string,expression);
+
+    for(x = T(-5); x <= T(+5); x += T(0.001))
+    {
+        const T y = expression.value();
+        printf("%19.15f\t%19.15f\n", x, y);
+    }
+}
+
+bool isNumber(const string &str){
+    typedef exprtk::expression<double>   expression_t;
+    typedef exprtk::parser<double>       parser_t;
+    parser_t parser;
+    expression_t expression;
+
+    return parser.compile(str, expression);
+}
+
+class Expression {
+public:
+    enum VarType{
+        SYSTEM,
+        CUSTOM,
+    };
+    enum ExpressionType{
+        NUMBER,
+        QUOTE,
+    };
+
+    inline void setVarType(VarType varType){m_VarType = varType;}
+    inline void setExpressionType(ExpressionType expressionType){m_ExpressionType = expressionType;}
+
+private:
+    string m_VarName;
+    double m_Value;
+    string m_ExpressionStr;
+
+    VarType m_VarType{CUSTOM};
+    ExpressionType m_ExpressionType{QUOTE};
+};
+
+
+int main()
+{
+    //Expression a;
+    //trig_function<double>();
+
+    cout<<"isNumber: "<< isNumber("1+2")<<endl;
+
+
+    return 0;
+}

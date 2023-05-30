@@ -1,0 +1,2 @@
+g++ -pedantic-errors -Wall -Wextra -Werror -Wno-long-long -O1 -o test test.cpp -lstdc++ -lm -Wa,-mbig-obj
+
